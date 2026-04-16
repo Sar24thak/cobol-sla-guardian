@@ -7,37 +7,63 @@ on:
 jobs:
   build:
     name: CI Pipeline by Sarthak
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]   # 🔥 Runs on both Linux & Windows
+    runs-on: ubuntu-latest
 
     steps:
+
+    # ✅ Checkout Code
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    # ✅ Setup Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18
 
+    # ✅ Setup Python
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
+    # ✅ Install Node Dependencies
     - name: Install Node Dependencies
       run: npm install
 
+    # ✅ Install Python Dependencies
     - name: Install Python Dependencies
       run: pip install joblib scikit-learn numpy
 
+    # ✅ Feature Extraction
     - name: Feature Extraction
       run: node runFeatureExtraction.js loop1.cbl
 
+    # ✅ ML Prediction
     - name: Run Prediction
       run: node runPrediction.js
 
+    # ✅ SLA Check (this decides PASS/FAIL)
     - name: SLA Check
       run: python sla_check.py
+
+    # 🚨 Send Email if Pipeline Fails
+    - name: Send Email on Failure
+      if: failure()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        secure: true
+        username: ${{ secrets.EMAIL_USER }}
+        password: ${{ secrets.EMAIL_PASS }}
+        subject: "🚨 SLA Breach Detected in CI Pipeline"
+        body: |
+          The latest commit has FAILED SLA validation.
+
+          ❌ Performance threshold breached
+          🔍 Please check GitHub Actions logs
+
+          Repo: COBOL SLA Guardian
+        to: ${{ secrets.EMAIL_USER }}
+        from: ${{ secrets.EMAIL_USER }}
