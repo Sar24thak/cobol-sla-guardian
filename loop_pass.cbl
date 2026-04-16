@@ -1,0 +1,15 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. FASTRUN.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 I PIC 9(4).
+       01 TOTAL PIC 9(6) VALUE 0.
+
+       PROCEDURE DIVISION.
+       MAIN.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 100
+               ADD I TO TOTAL
+           END-PERFORM
+           DISPLAY TOTAL
+           STOP RUN.
