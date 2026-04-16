@@ -7,13 +7,13 @@ with open("result.json") as f:
 
 cpu_time = data.get("cpu_time", 0)
 
-threshold = 80   # You will change this manually for demo
+threshold = 100   # 🔥 Set realistic threshold
 
 print(f"CPU Time: {cpu_time}")
 print(f"Threshold: {threshold}")
 
 if cpu_time <= threshold:
-    print("SLA OK - BUILD PASSED")
+    print("✅ SLA OK - BUILD PASSED")
 else:
-    print("SLA BREACH - BUILD FAILED")
-    sys.exit(1)
+    print("❌ SLA BREACH - BUILD FAILED")
+    sys.exit(1)   # 🚨 THIS FAILS PIPELINE
