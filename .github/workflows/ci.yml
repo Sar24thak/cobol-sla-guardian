@@ -35,7 +35,7 @@ jobs:
       run: node runFeatureExtraction.js LOOP1.cbl
 
     - name: Run Prediction
-      run: node runPrediction.js LOOP1.cbl
+      run: node runPrediction.js
 
     - name: SLA Check
       run: python sla_check.py
@@ -51,6 +51,6 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             title: "SLA Breach Detected",
-            body: "SLA validation failed.\n\nCPU threshold exceeded.\n\nCheck logs:\n" + runUrl,
+            body: "SLA validation failed.\n\nCheck logs:\n" + runUrl,
             labels: ["bug", "SLA", "critical"]
           });
