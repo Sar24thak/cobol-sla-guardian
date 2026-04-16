@@ -4,9 +4,6 @@ on:
   push:
     branches: [ main ]
 
-permissions:
-  issues: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,12 +29,13 @@ jobs:
       run: pip install numpy pandas scikit-learn joblib
 
     - name: Feature Extraction
-      run: node runFeatureExtraction.js LOOP1.cbl
+      run: node runFeatureExtraction.js loop1.cbl
 
     - name: Run Prediction
       run: node runPrediction.js
 
     - name: SLA Check
+      id: sla
       run: python sla_check.py
 
     - name: Create Issue on SLA Failure
@@ -50,7 +48,7 @@ jobs:
           await github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            title: "SLA Breach Detected",
-            body: "SLA validation failed.\n\nCheck logs:\n" + runUrl,
+            title: "❌ SLA Breach Detected",
+            body: "🚨 ALERT\n\nSLA validation failed.\n\nCPU threshold exceeded.\n\nCheck full logs here:\n" + runUrl + "\n\nRecommended actions:\n- Review COBOL code\n- Optimize performance\n- Re-run pipeline after fixes",
             labels: ["bug", "SLA", "critical"]
           });
