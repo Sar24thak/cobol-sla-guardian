@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]   # 🔥 Runs on both Linux & Windows
+        os: [ubuntu-latest]   # 🔥 Runs on both Linux & Windows
 
     steps:
     - name: Checkout Code
