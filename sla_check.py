@@ -5,7 +5,7 @@ with open("result.json") as f:
 
 cpu_time = data.get("cpu_time", 0)
 
-THRESHOLD = 100  # adjust if needed
+THRESHOLD = 10  # adjust if needed
 
 if cpu_time > THRESHOLD:
     print("❌ SLA BREACH - BUILD FAILED")
