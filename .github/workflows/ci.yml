@@ -1,4 +1,4 @@
-name: COBOL SLA Guardian CI - Sarthak
+name: CI Pipeline by Sarthak
 
 on:
   push:
@@ -6,48 +6,38 @@ on:
 
 jobs:
   build:
-    name: CI Pipeline by Sarthak
     runs-on: ubuntu-latest
 
     steps:
-
-    # ✅ Checkout Code
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # ✅ Setup Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18
 
-    # ✅ Setup Python
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    # ✅ Install Node Dependencies
     - name: Install Node Dependencies
       run: npm install
 
-    # ✅ Install Python Dependencies
     - name: Install Python Dependencies
-      run: pip install joblib scikit-learn numpy
+      run: pip install numpy pandas scikit-learn joblib
 
-    # ✅ Feature Extraction
     - name: Feature Extraction
       run: node runFeatureExtraction.js loop1.cbl
 
-    # ✅ ML Prediction
     - name: Run Prediction
       run: node runPrediction.js
 
-    # ✅ SLA Check (this decides PASS/FAIL)
     - name: SLA Check
+      id: sla
       run: python sla_check.py
 
-    # 🚨 Send Email if Pipeline Fails
     - name: Send Email on Failure
       if: failure()
       uses: dawidd6/action-send-mail@v3
@@ -57,13 +47,15 @@ jobs:
         secure: true
         username: ${{ secrets.EMAIL_USER }}
         password: ${{ secrets.EMAIL_PASS }}
-        subject: "🚨 SLA Breach Detected in CI Pipeline"
+        subject: "❌ SLA Breach Detected"
         body: |
-          The latest commit has FAILED SLA validation.
+          ALERT 🚨
 
-          ❌ Performance threshold breached
-          🔍 Please check GitHub Actions logs
+          SLA validation failed.
 
-          Repo: COBOL SLA Guardian
+          CPU threshold exceeded.
+
+          Please check GitHub Actions logs.
+
         to: ${{ secrets.EMAIL_USER }}
         from: ${{ secrets.EMAIL_USER }}
