@@ -1,0 +1,18 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. SLOWRUN.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 I PIC 9(5).
+       01 J PIC 9(5).
+       01 TOTAL PIC 9(10) VALUE 0.
+
+       PROCEDURE DIVISION.
+       MAIN.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 5000
+               PERFORM VARYING J FROM 1 BY 1 UNTIL J > 5000
+                   ADD I TO TOTAL
+               END-PERFORM
+           END-PERFORM
+           DISPLAY TOTAL
+           STOP RUN.
