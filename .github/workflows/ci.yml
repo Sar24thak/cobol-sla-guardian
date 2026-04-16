@@ -38,24 +38,17 @@ jobs:
       id: sla
       run: python sla_check.py
 
-    - name: Send Email on Failure
-      if: failure()
-      uses: dawidd6/action-send-mail@v3
+    - name: Create Issue on SLA Failure
+      if: ${{ failure() }}
+      uses: actions/github-script@v7
       with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        secure: true
-        username: ${{ secrets.EMAIL_USER }}
-        password: ${{ secrets.EMAIL_PASS }}
-        subject: "❌ SLA Breach Detected"
-        body: |
-          ALERT 🚨
+        script: |
+          const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
-          SLA validation failed.
-
-          CPU threshold exceeded.
-
-          Please check GitHub Actions logs.
-
-        to: ${{ secrets.EMAIL_USER }}
-        from: ${{ secrets.EMAIL_USER }}
+          await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: "❌ SLA Breach Detected",
+            body: "🚨 ALERT\n\nSLA validation failed.\n\nCPU threshold exceeded.\n\nCheck full logs here:\n" + runUrl + "\n\nRecommended actions:\n- Review COBOL code\n- Optimize performance\n- Re-run pipeline after fixes",
+            labels: ["bug", "SLA", "critical"]
+          });
