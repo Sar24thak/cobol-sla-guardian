@@ -1,0 +1,43 @@
+name: COBOL SLA Guardian CI - Sarthak
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: CI Pipeline by Sarthak
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]   # 🔥 Runs on both Linux & Windows
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Install Node Dependencies
+      run: npm install
+
+    - name: Install Python Dependencies
+      run: pip install joblib scikit-learn numpy
+
+    - name: Feature Extraction
+      run: node runFeatureExtraction.js loop1.cbl
+
+    - name: Run Prediction
+      run: node runPrediction.js
+
+    - name: SLA Check
+      run: python sla_check.py
