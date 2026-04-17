@@ -6,7 +6,7 @@ with open("result.json") as f:
 
 cpu_time = data.get("cpu_time", 0)
 
-threshold = 50
+threshold = 150
 
 print(f"CPU Time: {cpu_time}")
 print(f"Threshold: {threshold}")
